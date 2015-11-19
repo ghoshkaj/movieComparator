@@ -105,53 +105,111 @@
 
 
 
-/*/!*Jason's stuff*!/*/
-path {
-  stroke: steelblue;
-  stroke-width: 1;
-  fill: none;
-}
+/*/!*Jason's stuff*!/!*!/*/
+/*path {*/
+  /*stroke: steelblue;*/
+  /*stroke-width: 1;*/
+  /*fill: none;*/
+/*}*/
 
-#path2 {
-  stroke: lightblue;
-  stroke-dasharray: 3, 3;
-}
+/*#path2 {*/
+  /*stroke: lightblue;*/
+  /*stroke-dasharray: 3, 3;*/
+/*}*/
 
-.axis path,
-.axis line {
-/*.axis path {*/
-  fill: none;
-  stroke: black;
-  stroke-width: 1;
-  shape-rendering: crispEdges;
-}
+/*.axis path,*/
+/*.axis line {*/
+/*/!*.axis path {*!/*/
+  /*fill: none;*/
+  /*stroke: black;*/
+  /*stroke-width: 1;*/
+  /*shape-rendering: crispEdges;*/
+/*}*/
 
-.poly {
-  fill: #EBF2FC;
-}
+/*.poly {*/
+  /*fill: #EBF2FC;*/
+/*}*/
 
-.d3-tip {
-  line-height: 1;
-  font-weight: bold;
-  padding: 12px;
-  background: rgba(0, 0, 0, 0.8);
-  color: #fff;
-  border-radius: 2px;
-}
+/*.d3-tip {*/
+  /*line-height: 1;*/
+  /*font-weight: bold;*/
+  /*padding: 12px;*/
+  /*background: rgba(0, 0, 0, 0.8);*/
+  /*color: #fff;*/
+  /*border-radius: 2px;*/
+/*}*/
 
-.focus line {
-  stroke: purple;
-  shape-rendering: crispEdges;
-}
+/*.focus line {*/
+  /*stroke: purple;*/
+  /*shape-rendering: crispEdges;*/
+/*}*/
 
-.focus line.y0 {
-  stroke: steelblue;
-  stroke-dasharray: 3 3;
-  opacity: .5;
-}
+/*.focus line.y0 {*/
+  /*stroke: steelblue;*/
+  /*stroke-dasharray: 3 3;*/
+  /*opacity: .5;*/
+/*}*/
 
-.focus line.y1 {
-  stroke: indianred;
-  stroke-dasharray: 3 3;
-  opacity: .5;
-}
+/*.focus line.y1 {*/
+  /*stroke: indianred;*/
+  /*stroke-dasharray: 3 3;*/
+  /*opacity: .5;*/
+/*}*/
+
+/*body {*/
+  /*font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;*/
+  /*margin: auto;*/
+  /*position: relative;*/
+  /*width: 960px;*/
+/*}*/
+
+/*text {*/
+  /*font: 10px sans-serif;*/
+/*}*/
+
+/*.axis path,*/
+/*.axis line {*/
+  /*fill: none;*/
+  /*stroke: #000;*/
+  /*shape-rendering: crispEdges;*/
+/*}*/
+
+/*form {*/
+  /*position: absolute;*/
+  /*right: 10px;*/
+  /*top: 10px;*/
+/*}*/
+
+/*.tooltip {                                                        /!* NEW *!/*/
+  /*background: #eee;                                               /!* NEW *!/*/
+  /*box-shadow: 0 0 5px #999999;                                    /!* NEW *!/*/
+  /*color: #333;                                                    /!* NEW *!/*/
+  /*display: none;                                                  /!* NEW *!/*/
+  /*font-size: 12px;                                                /!* NEW *!/*/
+  /*left: 10px;                                                    /!* NEW *!/*/
+  /*padding: 10px;                                                  /!* NEW *!/*/
+  /*position: absolute;                                             /!* NEW *!/*/
+  /*text-align: center;                                             /!* NEW *!/*/
+  /*top: 10px;                                                      /!* NEW *!/*/
+  /*width: 80px;                                                    /!* NEW *!/*/
+  /*z-index: 10;                                                    /!* NEW *!/*/
+/*}                                                                 /!* NEW *!/*/
+/*.legend {*/
+  /*font-size: 12px;*/
+/*}*/
+
+/*#legend-rect {*/
+  /*cursor: pointer;                           /!* NEW *!/*/
+  /*stroke-width: 2;*/
+/*}*/
+/*#legend-rect.disabled {                              /!* NEW *!/*/
+  /*fill: transparent !important;              /!* NEW *!/*/
+/*}                                            /!* NEW *!/*/
+
+/*#toggle-rect {*/
+  /*cursor: pointer;                           /!* NEW *!/*/
+  /*stroke-width: 2;*/
+/*}*/
+/*#toggle-rect.disabled {                              /!* NEW *!/*/
+  /*fill: transparent !important;              /!* NEW *!/*/
+/*}                                            /!* NEW *!/*/

@@ -18,7 +18,8 @@ angular
     'ngSanitize',
     'ngTouch',
     'movieComparatorApp.d3',
-    'movieComparatorApp.directives'
+    'movieComparatorApp.directives',
+    'movieComparatorApp.map.directive'
   ])
   .config(function ($routeProvider) {
     $routeProvider

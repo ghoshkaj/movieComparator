@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style> /* set the CSS */
+body { 
+	font: 9px Arial;
+	background-color: white;
+}
+
+path { 
+    stroke: steelblue;
+    stroke-width: 2;
+    fill: none;
+}
+#path2 {
+    stroke: #00E6E6;
+    stroke-width: 1;   
+}
+
+.axis path,
+.axis line {
+    fill: none;
+    stroke: grey;
+    stroke-width: 1;
+    shape-rendering: crispEdges;
+}
+.poly {
+	fill: #EBF2FC;
+}
+.bar {
+  fill: steelblue;
+}
+
+
+</style>
+<body>
+
+<!-- load the d3.js library -->    
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<!-- load data, add 1-yr padding where appropriate (rects, etc) -->
+<script "text/javascript" src="./data/fred_dc_housingStarts_permits.json"></script>
+<script "text/javascript" src="./data/fred_dc_UnemplRateNsa_pct.json"></script>
+<script "text/javascript" src="./data/fred_RecessionDates.json"></script>
+
+<script>
+
+// Parameters
+// Set the dimensions of the canvas / graph
+var margin = {top: 30, right: 50, bottom: 30, left: 50},
+    width = 300 - margin.left - margin.right,
+    height = 150 - margin.top - margin.bottom;
+
+// Parse the date / time
+var parseDateRec = d3.time.format("%0m/%0d/%Y").parse;
+var parseDate = d3.time.format("%Y-%m-%d").parse;
+
+// Set the ranges
+var x = d3.time.scale().range([0, width]);
+var yScl = d3.scale.linear();
+var y1 = yScl.range([height, 0]);
+var y2 = d3.scale.linear().range([height, 0]);
+
+// Define bar chart parameters
+var bandSize = width / (data.length+12);
+
+// Define the axes
+var xAxis = d3.svg.axis().scale(x)
+    .orient("bottom").ticks(5).outerTickSize(0);
+
+var yAxis1 = d3.svg.axis().scale(y1)
+    .orient("left").ticks(4);
+
+var yAxis2 = d3.svg.axis().scale(y2)
+    .orient("right").ticks(4);
+
+   
+// Adds the svg canvas
+var svg = d3.select("body")
+    .append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+        .attr("transform", 
+              "translate(" + margin.left + "," + margin.top + ")");
+
+// clip outside viewport        
+var clip = svg.append("defs").append("clipPath")
+   .attr("id", "clipBox");
+   
+svg.append('rect') // outline for reference
+    .attr({width: width - bandSize/2,
+           height: height,
+           id: "viewport",
+           fill: "white"
+          }); // attributes in JS list format
+
+clip.append("use").attr("xlink:href", "#viewport");   
+
+
+// Fore-ground Data
+/*
+1988-01-01
+
+data = [
+{date:"1-May-12",close:58.13},
+{date:"30-Apr-12",close:53.98},
+{date:"27-Apr-12",close:67.00},
+{date:"26-Apr-12",close:89.70},
+*/
+
+
+
+// Background Code	
+    allBaseLines = [];
+/*
+
+    arrayOfPolygons = [{
+        "name": "polygon 1",
+            "points": [{
+            "date": "8/1/1929",
+            "y": 0
+        }, {
+            "date": "8/1/1929",
+            "y": 1
+        }, {
+            "date": "3/1/1933",
+            "y": 0
+        }, {
+            "date": "3/1/1933",
+            "y": 1
+        }]
+    }, {
+        "name": "polygon 2",
+            "points": [{
+            "date": "5/1/1937",
+            "y": 0
+        }, {
+*/
+
+
+// Determine Domain
+	//d3.csv("data.csv", function(error, data) {
+   data.forEach(function(d) {
+        d.date = parseDate(d.observation_date);
+        d.close = +d.WASH911BP1FH;
+    });
+
+   data2.forEach(function(d) {
+        d.date = parseDate(d.observation_date);
+        d.close = +d.WASH911URN;
+    });
+
+
+	
+    // Scale the range of the data
+    var xMin = d3.min(data, function(d) { return d.date; });
+    var xMax = d3.max(data, function(d) { return d.date; });
+    x.domain([xMin, xMax]);
+    y1.domain([0, d3.max(data, function(d) { return d.close; })]);	
+    y2.domain([0, d3.max(data2, function(d) { return d.close; })]);  	
+
+// Decompose Array
+//arrayOfPolygons.forEach( function(d){console.log( d) } )
+//arrayOfPolygons.forEach( function(d){d.points.forEach(function(d){console.log(d.date)}) } )
+arrayOfPolygons.forEach( function(d){d.points.forEach(function(d){d.date = x(parseDateRec(d.date))}) } )
+arrayOfPolygons.forEach( function(d){d.points.forEach(function(d){d.y = d.y * y1.domain()[1] }) } )
+
+// Add Background
+svg.selectAll("polygon")
+    .data(arrayOfPolygons)
+    .enter().append("polygon")
+    .attr("points", function (d) {
+    return getConvexHull(d.points.map(function (d) {
+        return [d.date, d.y]
+    })).map(function (d) {
+        return [(d[1][0]), y1(d[1][1])].join(",");
+    }).join(" ");
+})
+    .attr("fill", "lightgray")
+    .attr("stroke", "lightgray")
+    .attr("stroke-width", 0)
+    .attr("clip-path", "url(#clipBox)");
+
+        var poly = d3.selectAll("polygon");
+        poly
+        	.attr("class", "poly")
+
+// horizontal lines
+svg.selectAll("line.horizontalGrid").data(yScl.ticks(5)).enter()
+    .append("line")
+        .attr(
+        {
+            "class":"horizontalGrid",
+            "x1" : 0,
+            "x2" : width,
+            "y1" : function(d){ return yScl(d);},
+            "y2" : function(d){ return yScl(d);},
+            "fill" : "none",
+            "shape-rendering" : "crispEdges",
+            "stroke" : "lightgray",
+            "stroke-width" : "1px",
+            "clip-path" : "url(#clipBox)"
+        });
+	
+
+
+// Fore-ground Display  
+// Define the line
+/*var valueline1 = d3.svg.line()
+    .interpolate("basis")
+    .x(function(d) { return x(d.date); })
+    .y(function(d) { return y1(d.close); });
+    */
+
+var valueline2 = d3.svg.line()
+    .interpolate("basis")
+    .x(function(d) { return x(d.date); })
+    .y(function(d) { return y2(d.close); });
+    
+
+// Add the valueline path.
+ /*   svg.append("path")
+        .attr("class", "line1")
+        .attr("d", valueline1(data));
+        */
+
+    svg.selectAll("bar")
+          .data(data)
+        .enter().append("rect")
+          .style("fill", "steelblue")
+          .attr("x", function(d) { return x(d.date) - (width/data.length)/2; })
+          .attr("y", function(d) { return y1(d.close); })
+          .attr("width", bandSize )
+          .attr("height", function(d) { return height - y1(d.close); })
+          .attr("clip-path", "url(#clipBox)");
+
+    svg.append("path")
+        .attr("class", "line2")
+        .attr("d", valueline2(data2))
+        .attr("id", "path2")
+        .attr("clip-path", "url(#clipBox)");
+	
+	
+
+
+// ViewPort Axes
+	svg.append("g")
+		.attr("transform", 
+          "translate(" + margin.left + "," + margin.top + ")");
+
+    // Add the X Axis
+    svg.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(-" + bandSize/2 + "," + height + ")")
+        //.attr("transform", "translate(0," + height + ")")
+        .call(xAxis);
+
+    // Add the Y Axis1
+    svg.append("g")
+        .attr("class", "y axis")
+        .call(yAxis1)
+        .append("text")
+            .style("text-anchor","middle")
+            .attr("transform", 
+              "translate(" + 0 + "," + margin.top/-4 + ")")
+            .text("Housing Starts (permits)");
+
+    // Add the Y Axis2
+    svg.append("g")
+        .attr("class", "y axis")
+        .attr("transform", "translate(" + (width - bandSize/2) + ",0)")
+        .call(yAxis2)
+        .append("text")
+            .style("text-anchor","middle")
+            .attr("transform", 
+              "translate(" + 0 + "," + margin.top/-4 + ")")
+            .text("Unemployment Rate (pct)");
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// REFERENCES --------------------------------------------------
+// Convex hull Algorithm for ordering vertices in a polygon
+
+function getDistant(cpt, bl) {
+    Vy = bl[1][0] - bl[0][0];
+    Vx = bl[0][1] - bl[1][1];
+    return (Vx * (cpt[0] - bl[0][0]) + Vy * (cpt[1] - bl[0][1]))
+}
+
+function findMostDistantPointFromBaseLine(baseLine, points) {
+    var maxD = 0;
+    var maxPt = new Array();
+    var newPoints = new Array();
+    for (var idx in points) {
+        var pt = points[idx];
+        var d = getDistant(pt, baseLine);
+
+        if (d > 0) {
+            newPoints.push(pt);
+        } else {
+            continue;
+        }
+
+        if (d > maxD) {
+            maxD = d;
+            maxPt = pt;
+        }
+
+    }
+    return {
+        'maxPoint': maxPt,
+        'newPoints': newPoints
+    }
+}
+
+function buildConvexHull(baseLine, points) {
+
+    //plotBaseLine(baseLine,'rgb(180,180,180)');
+    allBaseLines.push(baseLine)
+    var convexHullBaseLines = new Array();
+    var t = findMostDistantPointFromBaseLine(baseLine, points);
+    if (t.maxPoint.length) {
+        convexHullBaseLines = convexHullBaseLines.concat(buildConvexHull([baseLine[0], t.maxPoint], t.newPoints));
+        convexHullBaseLines = convexHullBaseLines.concat(buildConvexHull([t.maxPoint, baseLine[1]], t.newPoints));
+        return convexHullBaseLines;
+    } else {
+        return [baseLine];
+    }
+}
+
+function getConvexHull(points) {
+    //find first baseline
+    var maxX, minX;
+    var maxPt, minPt;
+    for (var idx in points) {
+        var pt = points[idx];
+        if (pt[0] > maxX || !maxX) {
+            maxPt = pt;
+            maxX = pt[0];
+        }
+        if (pt[0] < minX || !minX) {
+            minPt = pt;
+            minX = pt[0];
+        }
+    }
+    var ch = [].concat(buildConvexHull([minPt, maxPt], points),
+    buildConvexHull([maxPt, minPt], points))
+    return ch;
+}
+
+
+</script>
+</body>
